@@ -14,20 +14,20 @@ public class Asignatura {
     public Asignatura() {
     }
 
-    public Asignatura(String Lenguaje, String Matematica, String Historia, String Ciencias) {
+    public Asignatura(ArrayList Lenguaje, ArrayList Matematica, ArrayList Historia, ArrayList Ciencias) {
         this.Lenguaje = Lenguaje;
         this.Matematica = Matematica;
         this.Historia = Historia;
         this.Ciencias = Ciencias;
     }
-public void Lenguaje() {
+
+    public void Lenguaje() {
 
         System.out.println("1.- narrativa y lírica");
         System.out.println("2.- género dramático");
         System.out.println("3.- medios de comunicación");
         System.out.println("0.- Salir");
         System.out.println("Elija la materia que desea reforzar");
-        
 
     }
 
@@ -37,7 +37,7 @@ public void Lenguaje() {
         System.out.println("3.- ");
         System.out.println("0.- Salir");
         System.out.println("Elija la materia que desea reforzar");
-        
+
     }
 
     public void Historia() {
@@ -46,7 +46,7 @@ public void Lenguaje() {
         System.out.println("3.- ");
         System.out.println("0.- Salir");
         System.out.println("Elija la materia que desea reforzar");
-        
+
     }
 
     public void Ciencias() {
@@ -55,8 +55,9 @@ public void Lenguaje() {
         System.out.println("3.- ");
         System.out.println("0.- Salir");
         System.out.println("Elija la materia que desea reforzar");
-        
+
     }
+
     //Getters
     public ArrayList getLenguaje() {
         return Lenguaje;
