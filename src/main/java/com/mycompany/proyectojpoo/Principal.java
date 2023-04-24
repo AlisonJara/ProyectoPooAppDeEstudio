@@ -20,39 +20,40 @@ public class Principal {
     public static ArrayList<Curso> Cursos = new ArrayList<Curso>();
 
     public static void main(String[] args) throws IOException {
-        Usuario User = new Usuario();
-        int OpcionCurso;
+        Usuario user = new Usuario();
+        int opcion;
         Scanner Entrada = new Scanner(System.in);
 
         do {
             //Prueba Github
-            System.out.println("1.- Crear ");
-            System.out.println("2.- Mostrar");
-            System.out.println("3.- Modificar");
-            System.out.println("4.- Eliminar");
+            System.out.println("1.- Crear Usuario ");
+            System.out.println("2.- Mostrar Cursos ");
+            System.out.println("3.- Modificar Usuario");
+            System.out.println("4.- Eliminar Usuario");
             System.out.println("0.- Salir");
-            System.out.println("Qué una opción para continuar");
-            OpcionCurso = Entrada.nextInt();
-            switch (OpcionCurso) {
+            System.out.println("Ingrese una opción");
+            opcion = Entrada.nextInt();
+            switch (opcion) {
                 case 1 ->
-                    User.CrearDatos();
+                    user.crearDatos();
                 case 2 -> {
                     leerDatos();
                     mostrarDatos();
                 }
-                case 3 -> {
-                    leerDatos();
-                    mostrarDatos();
+                case 3 ->{
+                    System.out.println("Ingrese el rut del usuario que desea modificar");
+                    String rut= Entrada.nextLine();
+                    user.modificarUser(rut);
                 }
-
                 case 4 -> {
-                    leerDatos();
-                    mostrarDatos();
+                    System.out.println("Ingrese el rut del usuario que desea Eliminar");
+                    String rut= Entrada.nextLine();
+                    user.eliminarUser(rut);
                 }
                 default ->
                     System.out.println("La opción ingresada no es valida");
             }
-        } while (OpcionCurso != 0);
+        } while (opcion != 0);
     }
 
     public static void leerDatos() {
@@ -75,7 +76,7 @@ public class Principal {
                 i++;
             }
 
-            System.out.println("el tamaño de objetos es " + Cursos.size());
+            System.out.println("Los cursos disponibles son " + Cursos.size());
 
         } catch (FileNotFoundException ex) {
             Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);

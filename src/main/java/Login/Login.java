@@ -1,8 +1,18 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package Login;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.Iterator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 /**
  *
@@ -30,13 +40,15 @@ public class Login extends javax.swing.JFrame {
         jPanel3 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         TituloInicioSesion = new javax.swing.JLabel();
-        BotonIngresar = new javax.swing.JButton();
+        botonRegistrar = new javax.swing.JButton();
         TituloUsuario1 = new javax.swing.JLabel();
         UsuarioText = new javax.swing.JTextField();
         jSeparator1 = new javax.swing.JSeparator();
         TituloContraseña = new javax.swing.JLabel();
         ContraseñaText = new javax.swing.JTextField();
         jSeparator2 = new javax.swing.JSeparator();
+        BotonIngresar1 = new javax.swing.JButton();
+        mensaje = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -78,13 +90,18 @@ public class Login extends javax.swing.JFrame {
         TituloInicioSesion.getAccessibleContext().setAccessibleDescription("Texto inicio sesion");
         TituloInicioSesion.getAccessibleContext().setAccessibleParent(TituloInicioSesion);
 
-        BotonIngresar.setText("Ingresar");
-        BotonIngresar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                BotonIngresarActionPerformed(evt);
+        botonRegistrar.setText("Registrarse");
+        botonRegistrar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                botonRegistrarMouseClicked(evt);
             }
         });
-        jPanel1.add(BotonIngresar, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 340, -1, -1));
+        botonRegistrar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonRegistrarActionPerformed(evt);
+            }
+        });
+        jPanel1.add(botonRegistrar, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 340, -1, -1));
 
         TituloUsuario1.setFont(new java.awt.Font("Berlin Sans FB", 0, 14)); // NOI18N
         TituloUsuario1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
@@ -124,27 +141,32 @@ public class Login extends javax.swing.JFrame {
         jSeparator2.setBackground(new java.awt.Color(153, 255, 204));
         jPanel1.add(jSeparator2, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 280, 330, 10));
 
+        BotonIngresar1.setText("Ingresar");
+        BotonIngresar1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BotonIngresar1ActionPerformed(evt);
+            }
+        });
+        jPanel1.add(BotonIngresar1, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 340, -1, -1));
+        jPanel1.add(mensaje, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 410, 100, 30));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void BotonIngresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonIngresarActionPerformed
+    private void botonRegistrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonRegistrarActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_BotonIngresarActionPerformed
+    }//GEN-LAST:event_botonRegistrarActionPerformed
 
     private void ContraseñaTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ContraseñaTextActionPerformed
         // TODO add your handling code here:
@@ -154,9 +176,45 @@ public class Login extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_UsuarioTextActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
+    private void BotonIngresar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonIngresar1ActionPerformed
+
+        try {
+            FileInputStream file = new FileInputStream("src/test/BD.xlsx");
+            Workbook libro = new XSSFWorkbook(file);
+            Sheet hojas = libro.getSheetAt(0);
+            Row filas;
+            String valor1 = "";
+            String valor2 = "";
+            for (Row fila : hojas) {
+                for (Cell celda : fila) {
+                    if (celda.getRowIndex() == 0 && celda.getColumnIndex() == 0) {
+                        valor1 = celda.getStringCellValue();
+                    } else if (celda.getRowIndex() == 1 && celda.getColumnIndex() == 0) {
+                        valor2 = celda.getStringCellValue();
+                    }
+
+                }
+            }
+            if (valor1.equals(UsuarioText.getText()) && valor2.equals(ContraseñaText.getText())) {
+                mensaje.setText("Inicio exitoso");
+            } else {
+                mensaje.setText("Usuario no encontraso, verifique los datos o registrese");
+            }
+
+            //cerramos el libro
+            libro.close();
+
+        } catch (IOException ex) {
+            System.out.println(ex.getMessage());
+        }
+
+    }//GEN-LAST:event_BotonIngresar1ActionPerformed
+
+    private void botonRegistrarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_botonRegistrarMouseClicked
+        Registro registro = new Registro();
+        registro.setVisible(true);
+    }//GEN-LAST:event_botonRegistrarMouseClicked
+
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -182,24 +240,24 @@ public class Login extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new Login().setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            new Login().setVisible(true);
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton BotonIngresar;
+    private javax.swing.JButton BotonIngresar1;
     private javax.swing.JTextField ContraseñaText;
     private javax.swing.JLabel TituloContraseña;
     private javax.swing.JLabel TituloInicioSesion;
     private javax.swing.JLabel TituloUsuario1;
     private javax.swing.JTextField UsuarioText;
+    private javax.swing.JButton botonRegistrar;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
+    private javax.swing.JLabel mensaje;
     // End of variables declaration//GEN-END:variables
 }
